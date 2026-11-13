@@ -1,4 +1,4 @@
-<nav class="navbar navbar-dark bg-primary sticky-top shadow-sm">
+<nav class="navbar navbar-dark bg-success sticky-top shadow-sm">
     <div class="container-fluid">
         <div class="d-flex align-items-center">
             <button class="navbar-toggler d-lg-none me-2" type="button"
@@ -12,17 +12,53 @@
             </a>
         </div>
 
+        <div class="d-flex align-items-center gap-2">
+            <!-- Tombol Ganti Tema Terang/Gelap -->
+            <button id="btnTema" class="btn btn-success" type="button" aria-label="Ganti tema">
+                <i id="ikonTema" class="bi bi-moon-stars-fill"></i>
+            </button>
         <div class="dropdown">
             <button class="btn btn-primary dropdown-toggle" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false">
+                    data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-person-circle"></i>
-                <span class="d-none d-sm-inline">Administrator</span>
+                <span class="d-none d-sm-inline">{{ Auth::user()->name }}</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><span class="dropdown-item-text small">Akun contoh</span></li>
+                <li>
+                    <span class="dropdown-item-text small">
+                        {{ Auth::user()->email }}
+                        <span class="badge text-bg-secondary ms-1">{{ Auth::user()->role }}</span>
+                    </span>
+                </li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item disabled" href="#">Keluar</a></li>
+                <li>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="dropdown-item text-danger">
+                            <i class="bi bi-box-arrow-right me-1"></i> Keluar
+                        </button>
+                    </form>
+                </li>
             </ul>
         </div>
     </div>
-</nav>*
+</nav>
+
+@push('scripts')
+<script>
+    const htmlEl = document.documentElement;
+    const btnTema = document.getElementById('btnTema');
+    const ikonTema = document.getElementById('ikonTema');
+
+    const temaTersimpan = localStorage.getItem('tema') || 'light';
+    htmlEl.setAttribute('data-bs-theme', temaTersimpan);
+    ikonTema.className = temaTersimpan === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+
+    btnTema.addEventListener('click', () => {
+        const temaBaru = htmlEl.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+        htmlEl.setAttribute('data-bs-theme', temaBaru);
+        localStorage.setItem('tema', temaBaru);
+        ikonTema.className = temaBaru === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+    });
+</script>
+@endpush

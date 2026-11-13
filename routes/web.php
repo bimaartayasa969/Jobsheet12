@@ -1,20 +1,86 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+// Nama     : Bima Artayasa
+// Nim      : 3202416151
+// Kelas    : TIF 5 C
+
+use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\DosenController;
-use App\Http\Controllers\MatakuliahController;
 use App\Http\Controllers\KrsController;
+use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\MataKuliahController;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn() => redirect()->route('dashboard'));
-Route::get('/beranda', [BerandaController::class, 'index'])->name('beranda');
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'authenticate'])->name('login.attempt');
+});
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
-Route::get('/dosen', [DosenController::class, 'index'])->name('dosen.index');
-Route::get('/mata-kuliah', [MatakuliahController::class, 'index'])->name('matakuliah.index');
-Route::get('/krs', [KrsController::class, 'index'])->name('krs.index');
+Route::middleware('auth')->group(function () {
+    Route::get('/', fn () => redirect()->route('dashboard'));
 
-Route::view('/uji-table', 'uji-table');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+
+    // Data Mahasiswa
+    Route::get('/mahasiswa/data', [MahasiswaController::class, 'data'])
+        ->name('mahasiswa.data');
+    
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('mahasiswa', MahasiswaController::class)
+            ->except(['index', 'show']);
+    });
+
+    Route::resource('mahasiswa', MahasiswaController::class)
+        ->only(['index', 'show']);
+
+    // --- DATA DOSEN (JOB SHEET 11) ---
+    // 1) Endpoint JSON DataTables: HARUS di atas route yang memuat {dosen}
+    Route::get('/dosen/data', [DosenController::class, 'data'])->name('dosen.data');
+
+    // 2) Tambah, ubah, hapus khusus admin (role berjalan SETELAH auth)
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('dosen', DosenController::class)
+            ->except(['index', 'show']);
+    });
+
+    // 3) Daftar dan detail: semua pengguna yang sudah login
+    Route::resource('dosen', DosenController::class)
+        ->only(['index', 'show']);
+    
+    // Data Mata Kuliah
+    Route::get('/matakuliah/data', [MataKuliahController::class, 'data'])
+        ->name('matakuliah.data');
+
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('matakuliah', MataKuliahController::class)
+            ->except(['index', 'show']);
+    });
+
+    Route::resource('matakuliah', MataKuliahController::class)
+        ->only(['index', 'show']);
+
+    // Data KRS
+    Route::get('/krs/data', [KrsController::class, 'data'])->name('krs.data');
+
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('krs', KrsController::class)
+            ->parameters(['krs' => 'krs'])
+            ->except(['index', 'show']);
+    });
+
+    Route::resource('krs', KrsController::class)
+        ->parameters(['krs' => 'krs'])
+        ->only(['index', 'show']);
+    
+    Route::get('/pengguna', [PenggunaController::class, 'index'])
+        ->middleware('role:admin')
+        ->name('pengguna.index');
+
+    Route::get('/beranda', [BerandaController::class, 'index'])->name('beranda');
+});

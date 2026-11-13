@@ -1,0 +1,32 @@
+<?php
+
+// Nama     : Bima Artayasa
+// Nim      : 3202416151
+// Kelas    : TIF 5 C
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('dosen', function (Blueprint $table) {
+            $table->string('jabatan_fungsional')->nullable()->after('alamat');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('dosen', function (Blueprint $table) {    
+            $table->dropColumn('jabatan_fungsional');
+        });
+    }
+};

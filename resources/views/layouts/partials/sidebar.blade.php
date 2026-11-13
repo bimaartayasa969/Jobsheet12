@@ -37,6 +37,16 @@
                     ikon="bi-journal-check">
                     KRS
                 </x-sidebar-link>
+            @if (Auth::user()->role === 'admin')
+            <small class="text-uppercase text-body-secondary fw-semibold mt-4 mb-2">
+                Administrasi
+            </small>
+            <ul class="nav nav-pills flex-column gap-1">
+                <x-sidebar-link route="pengguna.index" pola="pengguna.*" ikon="bi-shield-lock-fill">
+                    Pengguna
+                </x-sidebar-link>
+            </ul>
+            @endif
             </ul>
         </div>
     </div>

@@ -1,0 +1,21 @@
+<?php
+
+// Nama   : Bima Artayasa
+// Nim    : 3202416151
+// Kelas  : TIF 5 C
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Mahasiswa;
+use Illuminate\Database\Seeder;
+
+class MahasiswaSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        Mahasiswa::factory()->count(50)->create();
+    }
+}

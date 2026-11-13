@@ -17,6 +17,15 @@
                     :warna="$item['warna']" />
             </div>
         @endforeach
+
+        {{-- Kartu statistik kelima --}}
+        <div class="col-12 col-sm-6 col-xl-3">
+            <x-stat-card
+                judul="Rata-rata SKS per KRS"
+                jumlah="20"
+                ikon="bi-calculator"
+                warna="info" />
+        </div>
     </div>
 
     <div class="row g-3">
@@ -25,6 +34,7 @@
                 <div class="card-header bg-body fw-semibold">
                     KRS Terbaru
                 </div>
+
                 <div class="card-body p-0">
                     <x-tabel :kolom="$kolomKrs" :baris="$krsTerbaru" />
                 </div>
@@ -36,6 +46,7 @@
                 <div class="card-header bg-body fw-semibold">
                     Status KRS
                 </div>
+
                 <div class="card-body">
                     @foreach ($statusKrs as $s)
                         <div class="mb-3">

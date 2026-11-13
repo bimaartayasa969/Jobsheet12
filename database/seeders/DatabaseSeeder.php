@@ -1,5 +1,9 @@
 <?php
 
+// Nama   : Bima Artayasa
+// Nim    : 3202416151
+// Kelas  : TIF 5 C
+
 namespace Database\Seeders;
 
 use App\Models\User;
@@ -16,10 +20,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            AdminSeeder::class,
+            UserSeeder::class,
+            DosenSeeder::class,
+            MahasiswaSeeder::class,
+            MataKuliahSeeder::class,
+            KrsSeeder::class,
         ]);
     }
 }
